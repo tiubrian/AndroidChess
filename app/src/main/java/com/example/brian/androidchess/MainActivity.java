@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         short[] board = gameModel.getBoardModel().getBoard();
 
         GridView gridview = (GridView) findViewById(R.id.boardview);
-        SquareAdapter squareAdapter = new SquareAdapter(this,board,gridview);
+        SquareAdapter squareAdapter = new SquareAdapter(this,gameModel,gridview);
         gridview.setAdapter(squareAdapter);
 
     }

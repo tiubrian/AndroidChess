@@ -10,6 +10,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.example.brian.androidchess.R;
+import com.example.brian.androidchess.controllers.SquareController;
+import com.example.brian.androidchess.model.GameModel;
 
 
 /**
@@ -22,6 +24,8 @@ public class SquareAdapter extends BaseAdapter{
     private short[] board;
     private GridView gridView;
     private LayoutInflater inflater;
+    private int[] highlightBoard;
+    private GameModel gameModel;
     private short[] converter = {
             0,1,2,3,4,5,6,7,
             16,17,18,19,20,21,22,23,
@@ -33,10 +37,12 @@ public class SquareAdapter extends BaseAdapter{
             112,113,114,115,116,117,118,119
     };
 
-    public SquareAdapter(Context context, short[] board, GridView gridView) {
+    public SquareAdapter(Context context, GameModel gameModel, GridView gridView) {
         this.context = context;
-        this.board = board;
+        this.board = gameModel.getBoardModel().getBoard();
         this.gridView = gridView;
+        this.highlightBoard = gameModel.getBoardModel().getHighlightBoard();
+        this.gameModel = gameModel;
         this.inflater = LayoutInflater.from(context.getApplicationContext());
     }
 
@@ -67,10 +73,22 @@ public class SquareAdapter extends BaseAdapter{
 
         int row = position/8;
         int col = position%8;
-        if(row%2==0 && col%2 ==0 || row%2==1 && col%2==1) {
-            convertView.setBackgroundColor(Color.argb(255,153,150,151));
-        } else {
-            convertView.setBackgroundColor(Color.argb(255,56,57,228));
+
+        /*
+        0 - no highlight
+        1 - selected square highlight
+        2 - possible move highlight
+         */
+        switch (highlightBoard[position]) {
+            case 1: convertView.setBackgroundColor(Color.argb(255, 72, 3, 132));break;
+            case 2: break;
+            case 0:
+                if (row % 2 == 0 && col % 2 == 0 || row % 2 == 1 && col % 2 == 1) {
+                    convertView.setBackgroundColor(Color.argb(255, 153, 150, 151));
+                } else {
+                    convertView.setBackgroundColor(Color.argb(255, 56, 57, 228));
+                }
+                break;
         }
 
 
@@ -101,8 +119,8 @@ public class SquareAdapter extends BaseAdapter{
             case 6: oImageView.setImageResource(R.drawable.wk); break;
         }
 
-
         convertView.setTag(convertView);
+        convertView.setOnTouchListener(new SquareController(gameModel,this,position));
 
         return convertView;
     }

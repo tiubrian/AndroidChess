@@ -7,6 +7,8 @@
     <color name="darkSquare">#3843e4</color>
     <color name="colorClear">#005962e4</color>
     <color name="background">#156b08</color>
+    <color name="selectedSquare">#480384</color>
+
 
 
 </resources>

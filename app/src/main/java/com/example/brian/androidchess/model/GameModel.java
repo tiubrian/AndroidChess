@@ -6,6 +6,7 @@ package com.example.brian.androidchess.model;
 
 public class GameModel {
     private BoardModel boardModel = new BoardModel();
+    private char turn = 'w';
     public GameModel() {
     }
 
@@ -15,5 +16,22 @@ public class GameModel {
 
     public void setBoardModel(BoardModel boardModel) {
         this.boardModel = boardModel;
+    }
+
+    public void switchTurn() {
+        if(turn == 'w') {
+            turn = 'b';
+        } else {
+            turn = 'w';
+        }
+    }
+
+    // Getters and Setters
+    public char getTurn() {
+        return turn;
+    }
+
+    public void setTurn(char turn) {
+        this.turn = turn;
     }
 }
