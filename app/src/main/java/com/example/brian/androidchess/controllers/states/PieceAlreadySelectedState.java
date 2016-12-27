@@ -18,14 +18,13 @@ public class PieceAlreadySelectedState extends PressState {
 
     @Override
     public void press() {
-
+        // Setup
         char pressedPieceColor = '#';
         if(gameModel.getBoardModel().getBoard()[converter[position]] < 0) {
             pressedPieceColor = 'b';
         } else if(gameModel.getBoardModel().getBoard()[converter[position]] > 0) {
             pressedPieceColor = 'w';
         }
-
 
         char selectedPieceColor = '-';
         if(gameModel.getBoardModel().getBoard()[gameModel.getBoardModel().getCurrentSelectedPosition()] < 0) {
@@ -36,9 +35,12 @@ public class PieceAlreadySelectedState extends PressState {
 
         char turn = gameModel.getTurn();
 
+        // Change board
         if(pressedPieceColor == '#') {
             gameModel.getBoardModel().resetHighlightBoard();
             gameModel.getBoardModel().setStateEnum(StateEnum.NOTHINGPRESSEDSTATE);
+            gameModel.getBoardModel().movePiece(gameModel.getBoardModel().getCurrentSelectedPosition(),converter[position]);
+
         } else if(selectedPieceColor == pressedPieceColor) {
             gameModel.getBoardModel().resetHighlightBoard();
             gameModel.getBoardModel().getHighlightBoard()[position] = 1;

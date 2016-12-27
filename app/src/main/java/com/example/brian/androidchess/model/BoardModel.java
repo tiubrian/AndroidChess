@@ -50,7 +50,12 @@ public class BoardModel {
                 /*  White Pieces  */
             // Pawn
             case 1:
-                possibleMoves.add(position-16);
+                if(board[position-16]==0) {
+                    possibleMoves.add(position - 16);
+                    if ((position & 0x60) == 0x60) {
+                        possibleMoves.add(position - 32);
+                    }
+                }
                 break;
 
             // Rook
@@ -71,7 +76,12 @@ public class BoardModel {
                 /*  Black Pieces  */
             // Pawn
             case -1:
-                possibleMoves.add(position+16);
+                if(board[position+16]==0) {
+                    possibleMoves.add(position + 16);
+                    if ((position & 0x10) == 0x10) {
+                        possibleMoves.add(position + 32);
+                    }
+                }
                 break;
 
             // Rook
@@ -94,7 +104,12 @@ public class BoardModel {
     }
 
 
-
+    public short movePiece(int source, int target) {
+        short taken = board[target];
+        board[target] = board[source];
+        board[source] = 0;
+        return taken;
+    }
 
     public void resetHighlightBoard() {
         for(int i = 0; i < 128; i++) {

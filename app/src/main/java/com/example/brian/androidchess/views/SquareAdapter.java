@@ -117,6 +117,8 @@ public class SquareAdapter extends BaseAdapter{
             case 4: oImageView.setImageResource(R.drawable.wb); break;
             case 5: oImageView.setImageResource(R.drawable.wq); break;
             case 6: oImageView.setImageResource(R.drawable.wk); break;
+
+            case 0: oImageView.setImageResource(R.color.colorClear); break;
         }
 
         convertView.setTag(convertView);
