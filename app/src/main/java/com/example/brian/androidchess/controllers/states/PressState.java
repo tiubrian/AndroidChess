@@ -4,6 +4,8 @@ import com.example.brian.androidchess.controllers.SquareController;
 import com.example.brian.androidchess.model.BoardModel;
 import com.example.brian.androidchess.model.GameModel;
 
+import java.util.Vector;
+
 /**
  * Created by Brian on 16/12/27.
  */
@@ -27,6 +29,23 @@ public abstract class PressState {
         this.position = position;
         this.gameModel = gameModel;
         this.squareController = squareController;
+    }
+
+    protected void highlightPossible() {
+        Vector<Integer> possibleMoves = gameModel.getBoardModel().getPossibleMoves(converter[position]);
+        for(int i = 0; i < possibleMoves.size();i++) {
+            int pos = possibleMoves.get(i);
+            gameModel.getBoardModel().getHighlightBoard()[unconvert(pos)] = 2;
+        }
+    }
+
+    private int unconvert(int bigPosition) {
+        for(int i = 0; i < 64; i++) {
+            if(bigPosition == converter[i]) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public abstract void press();

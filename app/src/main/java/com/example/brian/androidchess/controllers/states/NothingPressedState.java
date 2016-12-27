@@ -20,6 +20,7 @@ public class NothingPressedState extends PressState{
             gameModel.getBoardModel().getHighlightBoard()[position] = 1;
             gameModel.getBoardModel().setStateEnum(StateEnum.PIECEALREADYSELECTEDSTATE);
             gameModel.getBoardModel().setCurrentSelectedPosition(converter[position]);
+            highlightPossible();
         }
     }
 }

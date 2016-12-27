@@ -8,6 +8,9 @@
     <color name="colorClear">#005962e4</color>
     <color name="background">#156b08</color>
     <color name="selectedSquare">#480384</color>
+    <color name="possibleSquareLight">#be6002</color>
+    <color name="possibleSquareDark">#480384</color>
+
 
 
 

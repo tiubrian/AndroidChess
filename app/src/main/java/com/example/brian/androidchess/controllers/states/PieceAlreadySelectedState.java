@@ -3,6 +3,9 @@ package com.example.brian.androidchess.controllers.states;
 import com.example.brian.androidchess.controllers.SquareController;
 import com.example.brian.androidchess.model.GameModel;
 
+import java.util.ArrayList;
+import java.util.Vector;
+
 /**
  * Created by Brian on 16/12/27.
  */
@@ -35,9 +38,11 @@ public class PieceAlreadySelectedState extends PressState {
 
         if(pressedPieceColor == '#') {
             gameModel.getBoardModel().resetHighlightBoard();
+            gameModel.getBoardModel().setStateEnum(StateEnum.NOTHINGPRESSEDSTATE);
         } else if(selectedPieceColor == pressedPieceColor) {
             gameModel.getBoardModel().resetHighlightBoard();
             gameModel.getBoardModel().getHighlightBoard()[position] = 1;
+            highlightPossible();
 
         } else {
             gameModel.getBoardModel().resetHighlightBoard();
@@ -46,4 +51,7 @@ public class PieceAlreadySelectedState extends PressState {
 
         }
     }
+
+
+
 }

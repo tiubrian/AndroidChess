@@ -2,6 +2,9 @@ package com.example.brian.androidchess.model;
 
 import com.example.brian.androidchess.controllers.states.StateEnum;
 
+import java.util.ArrayList;
+import java.util.Vector;
+
 /**
  * Created by Brian on 16/12/26.
  */
@@ -37,9 +40,61 @@ public class BoardModel {
     private int currentSelectedPosition = -1;
     private StateEnum stateEnum = StateEnum.NOTHINGPRESSEDSTATE;
 
-
     public BoardModel() {
     }
+
+    public Vector<Integer> getPossibleMoves(int position) {
+        Vector<Integer> possibleMoves = new Vector<>();
+
+        switch (board[position]) {
+                /*  White Pieces  */
+            // Pawn
+            case 1:
+                possibleMoves.add(position-16);
+                break;
+
+            // Rook
+            case 2: break;
+
+            // Knight
+            case 3: break;
+
+            // Bishop
+            case 4: break;
+
+            // Queen
+            case 5: break;
+
+            // King
+            case 6: break;
+
+                /*  Black Pieces  */
+            // Pawn
+            case -1:
+                possibleMoves.add(position+16);
+                break;
+
+            // Rook
+            case -2: break;
+
+            // Knight
+            case -3: break;
+
+            // Bishop
+            case -4: break;
+
+            // Queen
+            case -5: break;
+
+            // King
+            case -6: break;
+        }
+
+        return possibleMoves;
+    }
+
+
+
 
     public void resetHighlightBoard() {
         for(int i = 0; i < 128; i++) {
