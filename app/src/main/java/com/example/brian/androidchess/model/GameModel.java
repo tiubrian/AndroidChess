@@ -1,13 +1,17 @@
 package com.example.brian.androidchess.model;
 
+import android.content.Context;
+
 /**
  * Created by Brian on 16/12/27.
  */
 
 public class GameModel {
     private BoardModel boardModel = new BoardModel();
+    private Context context;
     private char turn = 'w';
-    public GameModel() {
+    public GameModel(Context context) {
+        this.context = context;
     }
 
     public BoardModel getBoardModel() {
@@ -33,5 +37,13 @@ public class GameModel {
 
     public void setTurn(char turn) {
         this.turn = turn;
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
     }
 }

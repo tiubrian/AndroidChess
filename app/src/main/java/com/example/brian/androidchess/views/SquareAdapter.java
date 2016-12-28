@@ -81,12 +81,20 @@ public class SquareAdapter extends BaseAdapter{
          */
         switch (highlightBoard[position]) {
             case 1: convertView.setBackgroundColor(Color.argb(255, 72, 3, 132));break;
-            case 2: convertView.setBackgroundColor(Color.argb(255, 90, 96, 2));break;
+            case 2:
+
+                if (row % 2 == 0 && col % 2 == 0 || row % 2 == 1 && col % 2 == 1) {
+                    convertView.setBackgroundColor(Color.argb(255, 200, 150, 50));
+                } else {
+                    convertView.setBackgroundColor(Color.argb(255, 180, 133, 34));
+                }
+
+                break;
             case 0:
                 if (row % 2 == 0 && col % 2 == 0 || row % 2 == 1 && col % 2 == 1) {
-                    convertView.setBackgroundColor(Color.argb(255, 153, 150, 151));
+                    convertView.setBackgroundColor(Color.argb(255, 128, 156, 225));
                 } else {
-                    convertView.setBackgroundColor(Color.argb(255, 56, 57, 228));
+                    convertView.setBackgroundColor(Color.argb(255, 8, 77, 147));
                 }
                 break;
         }

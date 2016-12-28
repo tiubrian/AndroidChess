@@ -1,5 +1,8 @@
 package com.example.brian.androidchess.controllers.states;
 
+import android.media.MediaPlayer;
+
+import com.example.brian.androidchess.R;
 import com.example.brian.androidchess.controllers.SquareController;
 import com.example.brian.androidchess.model.GameModel;
 
@@ -33,17 +36,32 @@ public class PieceAlreadySelectedState extends PressState {
             selectedPieceColor = 'w';
         }
 
-        char turn = gameModel.getTurn();
-
         // Change board
-        if(pressedPieceColor == '#') {
+        if(pressedPossibleMove() && selectedPieceColor == gameModel.getTurn()) {
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             gameModel.getBoardModel().resetHighlightBoard();
             gameModel.getBoardModel().setStateEnum(StateEnum.NOTHINGPRESSEDSTATE);
-            gameModel.getBoardModel().movePiece(gameModel.getBoardModel().getCurrentSelectedPosition(),converter[position]);
+            if(!(gameModel.getBoardModel().getBoard()[converter[position]] == 1 ||
+                    gameModel.getBoardModel().getBoard()[converter[position]] == -1)) {
+                gameModel.getBoardModel().movePiece(gameModel.getBoardModel().getCurrentSelectedPosition(), converter[position]);
+            } else {
+                gameModel.getBoardModel().pawnMove(gameModel.getBoardModel().getCurrentSelectedPosition(), converter[position]);
+            }
+            gameModel.switchTurn();
+            gameModel.getBoardModel().getCurrentPossibleMoves().clear();
+        } else if(pressedPieceColor == '#') {
+            gameModel.getBoardModel().resetHighlightBoard();
+            gameModel.getBoardModel().setStateEnum(StateEnum.NOTHINGPRESSEDSTATE);
 
         } else if(selectedPieceColor == pressedPieceColor) {
             gameModel.getBoardModel().resetHighlightBoard();
             gameModel.getBoardModel().getHighlightBoard()[position] = 1;
+            gameModel.getBoardModel().setCurrentSelectedPosition(converter[position]);
             highlightPossible();
 
         } else {
@@ -52,6 +70,15 @@ public class PieceAlreadySelectedState extends PressState {
             gameModel.getBoardModel().setStateEnum(StateEnum.NOTHINGPRESSEDSTATE);
 
         }
+    }
+
+    private boolean pressedPossibleMove() {
+        for(int i = 0; i < gameModel.getBoardModel().getCurrentPossibleMoves().size(); i++) {
+            if(gameModel.getBoardModel().getCurrentPossibleMoves().get(i) == converter[position]) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

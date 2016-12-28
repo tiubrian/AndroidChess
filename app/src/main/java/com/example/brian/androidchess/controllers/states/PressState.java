@@ -37,6 +37,7 @@ public abstract class PressState {
             int pos = possibleMoves.get(i);
             gameModel.getBoardModel().getHighlightBoard()[unconvert(pos)] = 2;
         }
+        gameModel.getBoardModel().setCurrentPossibleMoves(possibleMoves);
     }
 
     private int unconvert(int bigPosition) {

@@ -16,7 +16,14 @@ public class NothingPressedState extends PressState{
 
     @Override
     public void press() {
-        if(gameModel.getBoardModel().getBoard()[converter[position]] != 0) {
+        char pressedPieceColor = '#';
+        if(gameModel.getBoardModel().getBoard()[converter[position]] < 0) {
+            pressedPieceColor = 'b';
+        } else if(gameModel.getBoardModel().getBoard()[converter[position]] > 0) {
+            pressedPieceColor = 'w';
+        }
+        if(gameModel.getBoardModel().getBoard()[converter[position]] != 0 &&
+            pressedPieceColor== gameModel.getTurn()) {
             gameModel.getBoardModel().getHighlightBoard()[position] = 1;
             gameModel.getBoardModel().setStateEnum(StateEnum.PIECEALREADYSELECTEDSTATE);
             gameModel.getBoardModel().setCurrentSelectedPosition(converter[position]);

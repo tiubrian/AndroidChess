@@ -3,13 +3,14 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="lightSquare">#999697</color>
-    <color name="darkSquare">#3843e4</color>
+    <color name="lightSquare">#809ce1</color>
+    <color name="darkSquare">#084d93</color>
     <color name="colorClear">#005962e4</color>
-    <color name="background">#156b08</color>
+    <color name="background">#000000</color>
     <color name="selectedSquare">#480384</color>
-    <color name="possibleSquareLight">#be6002</color>
-    <color name="possibleSquareDark">#480384</color>
+    <color name="possibleSquareLight">#ff8522</color>
+    <color name="possibleSquareDark">#b47f1e</color>
+    <color name="drawerbackground">#8b8a89</color>
 
 
 
