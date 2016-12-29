@@ -52,12 +52,14 @@ public class DrawerController implements View.OnClickListener{
                     return;
                 }
 
-                GameModel gameModel = new GameModel(mContext);
+                GameModel gameModel = new GameModel(mContext, redcompon, blackcompon);
                 SquareAdapter squareAdapter = new SquareAdapter(mContext,gameModel,gridview);
                 gridview.setAdapter(squareAdapter);
+                gameModel.setSquareAdapter(squareAdapter);
 
-
+                gameModel.play();
                 drawerLayout.closeDrawers();
+
                 break;
             case "cancel": drawerLayout.closeDrawers(); break;
         }

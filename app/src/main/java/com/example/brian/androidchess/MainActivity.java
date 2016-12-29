@@ -20,12 +20,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.boardview);
 
-        GameModel gameModel = new GameModel(this);
-        short[] board = gameModel.getBoardModel().getBoard();
+        GameModel gameModel = new GameModel(this, false, false);
 
         GridView gridview = (GridView) findViewById(R.id.boardview);
         SquareAdapter squareAdapter = new SquareAdapter(this,gameModel,gridview);
         gridview.setAdapter(squareAdapter);
+        gameModel.setSquareAdapter(squareAdapter);
 
         Switch redcompswitch = (Switch) findViewById(R.id.switch7);
         Switch blackcompswitch = (Switch) findViewById(R.id.switch8);
@@ -36,5 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
         Button newgamebutton = (Button) findViewById(R.id.newgamebutton);
         newgamebutton.setOnClickListener(new DrawerController(drawerLayout,"newgame",gameModel,squareAdapter,this,gridview,redcompswitch,blackcompswitch));
+
+        gameModel.play();
     }
 }

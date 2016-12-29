@@ -1,8 +1,6 @@
 package com.example.brian.androidchess.controllers.states;
 
-import android.media.MediaPlayer;
-
-import com.example.brian.androidchess.R;
+import com.example.brian.androidchess.computerplayers.Move;
 import com.example.brian.androidchess.controllers.SquareController;
 import com.example.brian.androidchess.model.GameModel;
 
@@ -46,12 +44,13 @@ public class PieceAlreadySelectedState extends PressState {
 
             gameModel.getBoardModel().resetHighlightBoard();
             gameModel.getBoardModel().setStateEnum(StateEnum.NOTHINGPRESSEDSTATE);
-            if(!(gameModel.getBoardModel().getBoard()[converter[position]] == 1 ||
-                    gameModel.getBoardModel().getBoard()[converter[position]] == -1)) {
+            if(!(gameModel.getBoardModel().getBoard()[gameModel.getBoardModel().getCurrentSelectedPosition()] == 1 ||
+                    gameModel.getBoardModel().getBoard()[gameModel.getBoardModel().getCurrentSelectedPosition()] == -1)) {
                 gameModel.getBoardModel().movePiece(gameModel.getBoardModel().getCurrentSelectedPosition(), converter[position]);
             } else {
                 gameModel.getBoardModel().pawnMove(gameModel.getBoardModel().getCurrentSelectedPosition(), converter[position]);
             }
+            gameModel.addMove(new Move(gameModel.getBoardModel().getCurrentSelectedPosition(),converter[position]));
             gameModel.switchTurn();
             gameModel.getBoardModel().getCurrentPossibleMoves().clear();
         } else if(pressedPieceColor == '#') {

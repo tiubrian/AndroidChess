@@ -2,6 +2,7 @@ package com.example.brian.androidchess.model;
 
 import com.example.brian.androidchess.controllers.states.StateEnum;
 
+import java.security.Policy;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -10,16 +11,25 @@ import java.util.Vector;
  */
 
 public class BoardModel {
+    // Delta values
     private short[] knightDeltaValues = {31,-31,33,-33,18,-18,14,-14};
     private short[] kingDeltaValues = {-1,1,-16,16,17,15,-17,-15};
     private short[] rookDeltaValues = {-1,1,16,-16};
     private short[] queenDeltaValues = {-1,1,16,-16,15,-15,17,-17};
     private short[] bishopDeltaValues = {15,-15,17,-17};
 
+    // en passant stuff
     private boolean canEnpassant = false;
     private int enpassant1 = -1;
     private int enpassant2 = -1;
     private int enpassantPosition = -1;
+
+    // castling stuff
+    boolean canWhiteKingSideCastle = true;
+    boolean canWhiteQueenSideCastle = true;
+
+    boolean canBlackKingSideCastle = true;
+    boolean canBlackQueenSideCastle = true;
 
     /*
         0 - empty space
@@ -60,6 +70,16 @@ public class BoardModel {
     public static final int[] DELTA_ARRAY =         {0, 0, 0, 0, 0, 0, 0, 0, 0, -17, 0, 0, 0, 0, 0, 0, -16, 0, 0, 0, 0, 0, 0, -15, 0, 0, -17, 0, 0, 0, 0, 0, -16, 0, 0, 0, 0, 0, -15, 0, 0, 0, 0, -17, 0, 0, 0, 0, -16, 0, 0, 0, 0, -15, 0, 0, 0, 0, 0, 0, -17, 0, 0, 0, -16, 0, 0, 0, -15, 0, 0, 0, 0, 0, 0, 0, 0, -17, 0, 0, -16, 0, 0, -15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -17, -33, -16, -31, -15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -18, -17, -16, -15, -14, 0, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 14, 15, 16, 17, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 31, 16, 33, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 16, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 16, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 16, 0, 0, 0, 0, 17, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 17, 0, 0, 15, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     public static final int[] UPDATED_DELTA_ARRAY = {0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 15, 0, 0, 17, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 17, 0, 0, 0, 0, 16, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 17, 0, 0, 0, 16, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 16, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 33, 16, 31, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 17, 16, 15, 14, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 0, -14, -15, -16, -17, -18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -15, -31, -16, -33, -17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -15, 0, 0, -16, 0, 0, -17, 0, 0, 0, 0, 0, 0, 0, 0, -15, 0, 0, 0, -16, 0, 0, 0, -17, 0, 0, 0, 0, 0, 0, -15, 0, 0, 0, 0, -16, 0, 0, 0, 0, -17, 0, 0, 0, 0, -15, 0, 0, 0, 0, 0, -16, 0, 0, 0, 0, 0, -17, 0, 0, -15, 0, 0, 0, 0, 0, 0, -16, 0, 0, 0, 0, 0, 0, -17, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
+    private short[] converter = {
+            0,1,2,3,4,5,6,7,
+            16,17,18,19,20,21,22,23,
+            32,33,34,35,36,37,38,39,
+            48,49,50,51,52,53,54,55,
+            64,65,66,67,68,69,70,71,
+            80,81,82,83,84,85,86,87,
+            96,97,98,99,100,101,102,103,
+            112,113,114,115,116,117,118,119
+    };
 
     private int[] highlightBoard = new int[128];
     private int currentSelectedPosition = -1;
@@ -70,9 +90,183 @@ public class BoardModel {
     private int blackKingPosition = 4;
 
 
-    public BoardModel() {
+
+
+    public boolean isAttackedByBlack(int position) {
+        for(int i = 0; i < 128; i++) {
+            // skip fake board
+            if((i & 0x0f) == 8) {
+                i += 7;
+                continue;
+            }
+
+            // If we found a black piece
+            if(board[i] < 0) {
+                if (ATTACK_ARRAY[(position - i + 128)] != 0) {
+                    // Find the delta
+                    int delta = DELTA_ARRAY[position-i+128];
+                    int index = i;
+                    int attackIndex = ATTACK_ARRAY[(position - i + 128)];
+                    switch (board[i]) {
+                        case -1:
+                            if(attackIndex != 3) {
+                                continue;
+                            }
+                            break;
+                        case -2:
+                            if(attackIndex != 1 && attackIndex != 2) {
+                                continue;
+                            }
+                            break;
+                        case -3:
+                            if(attackIndex != 6) {
+                                continue;
+                            }
+                            break;
+                        case -4:
+                            if(attackIndex != 4 &&
+                                    attackIndex != 3 &&
+                                    attackIndex != 5) {
+                                continue;
+                            }
+                            break;
+                        case -5:
+                            if(attackIndex != 1 &&
+                                    attackIndex != 2 &&
+                                    attackIndex != 3 &&
+                                    attackIndex != 4 &&
+                                    attackIndex != 5) {
+                                continue;
+                            }
+                            break;
+                        case -6:
+                            if(attackIndex != 1 &&
+                                    attackIndex != 3 &&
+                                    attackIndex != 4) {
+                                continue;
+                            }
+                            break;
+                    }
+                    if(delta>0) {
+                        while(true) {
+                            index += delta;
+                            if(index > position) {
+                                break;
+                            }
+                            if(index == position) {
+                                return true;
+                            }
+                            if(board[index] != 0) {
+                                break;
+                            }
+                        }
+                    } else {
+                        while(true) {
+                            index += delta;
+                            if(index < position) {
+                                break;
+                            }
+                            if(index == position) {
+                                return true;
+                            }
+                            if(board[index] != 0) {
+                                break;
+                            }
+                        }
+
+                    }
+                }
+            }
+
+        }
+
+        return false;
     }
 
+    public boolean isAttackedByWhite(int position) {
+        for(int i = 0; i < 128; i++) {
+            // If we found a white piece
+            if(board[i] > 0) {
+                if (ATTACK_ARRAY[(position - i + 128)] != 0) {
+                    // Find the delta
+                    int delta = DELTA_ARRAY[position-i+128];
+                    int index = i;
+                    int attackIndex = ATTACK_ARRAY[(position - i + 128)];
+                    switch (board[i]) {
+                        case 1:
+                            if(attackIndex != 4) {
+                                continue;
+                            }
+                            break;
+                        case 2:
+                            if(attackIndex != 1 && attackIndex != 2) {
+                                continue;
+                            }
+                            break;
+                        case 3:
+                            if(attackIndex != 6) {
+                                continue;
+                            }
+                            break;
+                        case 4:
+                            if(attackIndex != 4 &&
+                                    attackIndex != 3 &&
+                                    attackIndex != 5) {
+                                continue;
+                            }
+                            break;
+                        case 5:
+                            if(attackIndex != 1 &&
+                                    attackIndex != 2 &&
+                                    attackIndex != 3 &&
+                                    attackIndex != 4 &&
+                                    attackIndex != 5) {
+                                continue;
+                            }
+                            break;
+                        case 6:
+                            if(attackIndex != 1 &&
+                                    attackIndex != 3 &&
+                                    attackIndex != 4) {
+                                continue;
+                            }
+                            break;
+                    }
+                    if(delta>0) {
+                        while(true) {
+                            index += delta;
+                            if(index > position) {
+                                break;
+                            }
+                            if(index == position) {
+                                return true;
+                            }
+                            if(board[index] != 0) {
+                                break;
+                            }
+                        }
+                    } else {
+                        while(true) {
+                            index += delta;
+                            if(index < position) {
+                                break;
+                            }
+                            if(index == position) {
+                                return true;
+                            }
+                            if(board[index] != 0) {
+                                break;
+                            }
+                        }
+
+                    }
+                }
+            }
+
+        }
+
+        return false;
+    }
 
 
     public boolean isBlackKingInCheck() {
@@ -162,6 +356,12 @@ public class BoardModel {
 
     public boolean isWhiteKingInCheck() {
         for(int i = 0; i < 128; i++) {
+            // skip fake board
+            if((i & 0x0f) == 8) {
+                i += 7;
+                continue;
+            }
+
             // If we found a black piece
             if(board[i] < 0) {
                 if (ATTACK_ARRAY[(whiteKingPosition - i + 128)] != 0) {
@@ -239,7 +439,6 @@ public class BoardModel {
                     }
                 }
             }
-
         }
 
         return false;
@@ -265,6 +464,43 @@ public class BoardModel {
         } else if(board[source] == 6) {
             whiteKingPosition = source;
         }
+    }
+
+    public Vector<Integer> getAllPossibleWhiteMoves() {
+        Vector<Integer> possible = new Vector<>();
+        for(int i = 0; i < 128; i++) {
+            // skip fake board
+            if ((i & 0x0f) == 8) {
+                i += 7;
+                continue;
+            }
+            if(board[i] > 0) {
+                Vector<Integer> singlePossible = getPossibleMoves(i);
+                for(int j = 0; j < singlePossible.size(); j++) {
+                    possible.add(singlePossible.get((j)));
+                }
+            }
+        }
+        return possible;
+    }
+
+
+    public Vector<Integer> getAllPossibleBlackMoves() {
+        Vector<Integer> possible = new Vector<>();
+        for(int i = 0; i < 128; i++) {
+            // skip fake board
+            if ((i & 0x0f) == 8) {
+                i += 7;
+                continue;
+            }
+            if(board[i] < 0) {
+                Vector<Integer> singlePossible = getPossibleMoves(i);
+                for(int j = 0; j < singlePossible.size(); j++) {
+                    possible.add(singlePossible.get((j)));
+                }
+            }
+        }
+        return possible;
     }
 
     public Vector<Integer> getPossibleMoves(int position) {
@@ -428,8 +664,20 @@ public class BoardModel {
                             possibleMoves.add(position + kingDeltaValues[i]);
                         }
                         undoMove(taken,position,position+kingDeltaValues[i]);
-
                     }
+                }
+                // King side castle
+                if(canWhiteKingSideCastle &&
+                        board[117] == 0 && board[118] == 0 &&
+                        !isAttackedByBlack(116) && !isAttackedByBlack(117) && !isAttackedByBlack(118)) {
+                   possibleMoves.add(118);
+                }
+
+                // Queen side castle
+                if(canWhiteQueenSideCastle &&
+                        board[115] == 0 && board[114] == 0 && board[113] == 0 &&
+                        !isAttackedByBlack(116) && !isAttackedByBlack(115) && !isAttackedByBlack(114)) {
+                    possibleMoves.add(114);
                 }
                 break;
 
@@ -580,7 +828,20 @@ public class BoardModel {
                         }
                         undoMove(taken,position,position+kingDeltaValues[i]);
                     }
-                }break;
+                }
+                // King side castle
+                if(canBlackKingSideCastle &&
+                        board[5] == 0 && board[6] == 0 &&
+                        !isAttackedByWhite(4) && !isAttackedByWhite(5) && !isAttackedByWhite(6)) {
+                    possibleMoves.add(6);
+                }
+                // Queen side castle
+                if(canBlackQueenSideCastle &&
+                        board[1] == 0 && board[2] == 0 && board[3] ==0 &&
+                        !isAttackedByWhite(2) && !isAttackedByWhite(3) && !isAttackedByWhite(4)){
+                    possibleMoves.add(2);
+                }
+                break;
         }
 
         return possibleMoves;
@@ -592,10 +853,44 @@ public class BoardModel {
         board[target] = board[source];
         board[source] = 0;
 
-        if(board[target] == 6) {
-            whiteKingPosition = target;
-        } else if(board[target] == -6) {
-            blackKingPosition = target;
+        switch (board[target]) {
+            case 6:
+                whiteKingPosition = target;
+                canWhiteKingSideCastle = false;
+                canWhiteQueenSideCastle = false;
+                if(source == 116) {
+                    if(target == 118) {
+                        board[119] = 0;
+                        board[117] = 2;
+                    } else if(target == 114) {
+                        board[112] = 0;
+                        board[115] = 2;
+                    }
+                }
+                break;
+            case -6:
+                blackKingPosition = target;
+                canBlackKingSideCastle = false;
+                canBlackQueenSideCastle = false;
+                if(source == 4) {
+                    if(target == 2) {
+                        board[0] = 0;
+                        board[3] = -2;
+                    } else if(target == 6) {
+                        board[7] = 0;
+                        board[5] = -2;
+                    }
+                }
+                break;
+
+            case 2:
+                if(source == 119) {
+                    canWhiteKingSideCastle = false;
+                } else if(source == 12) {
+                    canWhiteQueenSideCastle = false;
+                }
+                break;
+
         }
 
         return taken;
@@ -616,6 +911,7 @@ public class BoardModel {
             board[target] = -5;
             return taken;
         }
+        /*
 
         // En passant stuff
         if((target-source==32) && target == 1) {
@@ -629,9 +925,17 @@ public class BoardModel {
                 enpassant2 = target+1;
                 enpassantPosition = target+16;
             }
-        }
+        }*/
 
         return taken;
+    }
+    public int unconvert(int bigPosition) {
+        for(int i = 0; i < 64; i++) {
+            if(bigPosition == converter[i]) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public void resetHighlightBoard() {

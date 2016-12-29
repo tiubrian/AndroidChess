@@ -7,7 +7,6 @@ import android.view.View;
 import com.example.brian.androidchess.controllers.states.NothingPressedState;
 import com.example.brian.androidchess.controllers.states.PieceAlreadySelectedState;
 import com.example.brian.androidchess.controllers.states.PressState;
-import com.example.brian.androidchess.controllers.states.StateEnum;
 import com.example.brian.androidchess.model.GameModel;
 import com.example.brian.androidchess.views.SquareAdapter;
 
