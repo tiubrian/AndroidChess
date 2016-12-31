@@ -5,6 +5,7 @@ import com.example.brian.androidchess.model.BoardModel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
@@ -25,6 +26,8 @@ public abstract class ComputerPlayer {
 
     protected boolean CANBLACKKINGSIDECASTLE;
     protected boolean CANBLACKQUEENSIDECASTLE;
+
+    protected HashMap<String,Integer> boardPositions;
 
     private short[] knightDeltaValues = {31,-31,33,-33,18,-18,14,-14};
     private short[] kingDeltaValues = {-1,1,-16,16,17,15,-17,-15};
@@ -64,6 +67,28 @@ public abstract class ComputerPlayer {
             5, -5,-10,  0,  0,-10, -5,  5,  0,  0,  0,  0,  0,  0,  0,  0,
             5, 10, 10,-20,-20, 10, 10,  5,  0,  0,  0,  0,  0,  0,  0,  0,
             0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+    };
+
+    int[] pawnEvalTableWhiteEnd = {
+            500,500,500,500,500,500,500,500,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0,
+            50,50,50,50,50,50,50,50,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0,
+            40,40,40,40,40,40,40,40,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0,
+            30,30,30,30,30,30,30,30,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0,
+            20,20,20,20,20,20,20,20,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0,
+            10,10,10,10,10,10,10,10,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0,
+            0 ,0 ,0 ,0 ,0 ,0 ,0 , 0,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0,
+            0 ,0 ,0 ,0 ,0 ,0 ,0 ,0,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0
+    };
+
+    int[] pawnEvalTableBlackEnd = {
+            0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0,
+            0 ,0 ,0 ,0 ,0 ,0 ,0 , 0,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0,
+            10,10,10,10,10,10,10,10,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0,
+            20,20,20,20,20,20,20,20,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0,
+            30,30,30,30,30,30,30,30,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0,
+            40,40,40,40,40,40,40,40,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0,
+            50,50,50,50,50,50,50,50,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0,
+            500,500,500,500,500,500,500,500,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0
     };
 
     int[] knightEvalTableWhite = {
@@ -212,6 +237,8 @@ public abstract class ComputerPlayer {
 
         whiteKingPosition = boardModel.getWhiteKingPosition();
         blackKingPosition = boardModel.getBlackKingPosition();
+
+        boardPositions = (HashMap<String, Integer>) boardModel.getBoardPositions();
 /*
         canWhiteKingSideCastle = boardModel.isCanWhiteKingSideCastle();
         canWhiteQueenSideCastle = boardModel.isCanWhiteQueenSideCastle();
@@ -302,6 +329,7 @@ public abstract class ComputerPlayer {
     }
 
     protected void undoMove(short taken, Move move) {
+//        boardPositions.put(boardModel.toString(),boardPositions.get(boardModel.toString())-1);
         int source = move.getBefore();
         int target = move.getAfter();
         board[source] = board[target];
@@ -569,6 +597,7 @@ public abstract class ComputerPlayer {
                 }*/
 
         }
+        //boardModel.addBoardPosition(boardModel.toString());
         return taken;
     }
 
@@ -1340,6 +1369,15 @@ public abstract class ComputerPlayer {
         });
 
         return toReturn;
+    }
+
+    protected boolean isThreeFoldDraw() {
+        for(String key : boardPositions.keySet()) {
+            if(boardPositions.get(key) >= 2) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

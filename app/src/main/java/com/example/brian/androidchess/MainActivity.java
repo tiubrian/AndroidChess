@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Switch;
 
+import com.example.brian.androidchess.controllers.ButtonController;
 import com.example.brian.androidchess.controllers.DrawerController;
 import com.example.brian.androidchess.model.GameModel;
 import com.example.brian.androidchess.views.SquareAdapter;
@@ -30,12 +31,17 @@ public class MainActivity extends AppCompatActivity {
         Switch redcompswitch = (Switch) findViewById(R.id.switch7);
         Switch blackcompswitch = (Switch) findViewById(R.id.switch8);
 
+        Button flipBoardButton = (Button) findViewById(R.id.flip);
+        ButtonController flipBoardListener = new ButtonController("flip",gameModel,squareAdapter,this,gridview);
+        flipBoardButton.setOnClickListener(flipBoardListener);
+
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         Button cancelbutton = (Button) findViewById(R.id.cancelbutton);
-        cancelbutton.setOnClickListener(new DrawerController(drawerLayout,"cancel",gameModel,squareAdapter,this,gridview,redcompswitch,blackcompswitch));
+        cancelbutton.setOnClickListener(new DrawerController(drawerLayout,"cancel",gameModel,squareAdapter,this,gridview,redcompswitch,blackcompswitch,flipBoardButton));
 
         Button newgamebutton = (Button) findViewById(R.id.newgamebutton);
-        newgamebutton.setOnClickListener(new DrawerController(drawerLayout,"newgame",gameModel,squareAdapter,this,gridview,redcompswitch,blackcompswitch));
+        newgamebutton.setOnClickListener(new DrawerController(drawerLayout,"newgame",gameModel,squareAdapter,this,gridview,redcompswitch,blackcompswitch,flipBoardButton));
+
 
         gameModel.play();
     }

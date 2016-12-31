@@ -4,6 +4,8 @@ import com.example.brian.androidchess.controllers.states.StateEnum;
 
 import java.security.Policy;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 /**
@@ -11,6 +13,17 @@ import java.util.Vector;
  */
 
 public class BoardModel {
+    Map<String,Integer> boardPositions = new HashMap<>();
+    int numWhiteQueen = 1;
+    int numWhiteRook = 2;
+    int numWhiteKnight = 2;
+    int numWhiteBishop = 2;
+
+    int numBlackQueen = 1;
+    int numBlackRook = 2;
+    int numBlackKnight = 2;
+    int numBlackBishop = 2;
+
     // Delta values
     private short[] knightDeltaValues = {31,-31,33,-33,18,-18,14,-14};
     private short[] kingDeltaValues = {-1,1,-16,16,17,15,-17,-15};
@@ -850,8 +863,27 @@ public class BoardModel {
         return possibleMoves;
     }
 
+    public void addBoardPosition(String boardPosition) {
+        if(!boardPositions.containsKey(boardPosition)) {
+            boardPositions.put(boardPosition,1);
+        } else {
+            boardPositions.put(boardPosition,boardPositions.get(boardPosition)+1);
+        }
+    }
 
     public short movePiece(int source, int target) {
+        switch (board[target]) {
+            case 2: numWhiteRook--; break;
+            case 3: numWhiteKnight--; break;
+            case 4: numWhiteBishop--; break;
+            case 5: numWhiteQueen--; break;
+
+            case -2: numBlackRook--; break;
+            case -3: numBlackKnight--; break;
+            case -4: numBlackBishop--; break;
+            case -5: numBlackQueen--; break;
+        }
+
         short taken = board[target];
         board[target] = board[source];
         board[source] = 0;
@@ -902,12 +934,22 @@ public class BoardModel {
                 }
                 break;
         }
-
+        //addBoardPosition(this.toString());
         return taken;
     }
 
     public short pawnMove(int source, int target) {
+        switch (board[target]) {
+            case 2: numWhiteRook--; break;
+            case 3: numWhiteKnight--; break;
+            case 4: numWhiteBishop--; break;
+            case 5: numWhiteQueen--; break;
 
+            case -2: numBlackRook--; break;
+            case -3: numBlackKnight--; break;
+            case -4: numBlackBishop--; break;
+            case -5: numBlackQueen--; break;
+        }
 
         short taken = board[target];
         board[target] = board[source];
@@ -936,7 +978,7 @@ public class BoardModel {
                 enpassantPosition = target+16;
             }
         }*/
-
+        //addBoardPosition(this.toString());
         return taken;
     }
     public int unconvert(int bigPosition) {
@@ -956,6 +998,14 @@ public class BoardModel {
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < 128; i++) {
+            // skip fake board
+            if ((i & 0x0f) == 8) {
+                i += 7;
+                continue;
+            }
+            sb.append(board[i]);
+        }
         return sb.toString();
     }
 
@@ -1166,5 +1216,77 @@ public class BoardModel {
 
     public void setConverter(short[] converter) {
         this.converter = converter;
+    }
+
+    public Map<String, Integer> getBoardPositions() {
+        return boardPositions;
+    }
+
+    public void setBoardPositions(Map<String, Integer> boardPositions) {
+        this.boardPositions = boardPositions;
+    }
+
+    public int getNumWhiteQueen() {
+        return numWhiteQueen;
+    }
+
+    public void setNumWhiteQueen(int numWhiteQueen) {
+        this.numWhiteQueen = numWhiteQueen;
+    }
+
+    public int getNumWhiteRook() {
+        return numWhiteRook;
+    }
+
+    public void setNumWhiteRook(int numWhiteRook) {
+        this.numWhiteRook = numWhiteRook;
+    }
+
+    public int getNumWhiteKnight() {
+        return numWhiteKnight;
+    }
+
+    public void setNumWhiteKnight(int numWhiteKnight) {
+        this.numWhiteKnight = numWhiteKnight;
+    }
+
+    public int getNumWhiteBishop() {
+        return numWhiteBishop;
+    }
+
+    public void setNumWhiteBishop(int numWhiteBishop) {
+        this.numWhiteBishop = numWhiteBishop;
+    }
+
+    public int getNumBlackQueen() {
+        return numBlackQueen;
+    }
+
+    public void setNumBlackQueen(int numBlackQueen) {
+        this.numBlackQueen = numBlackQueen;
+    }
+
+    public int getNumBlackRook() {
+        return numBlackRook;
+    }
+
+    public void setNumBlackRook(int numBlackRook) {
+        this.numBlackRook = numBlackRook;
+    }
+
+    public int getNumBlackKnight() {
+        return numBlackKnight;
+    }
+
+    public void setNumBlackKnight(int numBlackKnight) {
+        this.numBlackKnight = numBlackKnight;
+    }
+
+    public int getNumBlackBishop() {
+        return numBlackBishop;
+    }
+
+    public void setNumBlackBishop(int numBlackBishop) {
+        this.numBlackBishop = numBlackBishop;
     }
 }

@@ -11,12 +11,15 @@ import com.example.brian.androidchess.computerplayers.RandomComputerPlayer;
 import com.example.brian.androidchess.views.SquareAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Brian on 16/12/27.
  */
 
 public class GameModel {
+
     private BoardModel boardModel = new BoardModel();
     private Context context;
     private char turn = 'w';
@@ -76,6 +79,9 @@ public class GameModel {
                     public void run() {
                         squareAdapter.notifyDataSetChanged();
                         CharSequence text = "White wins!";
+                        if(!boardModel.isBlackKingInCheck()) {
+                            text = "Stalemate!";
+                        }
                         int duration = Toast.LENGTH_LONG;
 
                         Toast toast = Toast.makeText(context, text, duration);
@@ -104,6 +110,9 @@ public class GameModel {
                     @Override
                     public void run() {
                         CharSequence text = "Black wins!";
+                        if(!boardModel.isWhiteKingInCheck()) {
+                            text = "Stalemate!";
+                        }
                         int duration = Toast.LENGTH_LONG;
                         Toast toast = Toast.makeText(context, text, duration);
                         toast.show();

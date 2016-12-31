@@ -139,4 +139,68 @@ public class SquareAdapter extends BaseAdapter{
 
         return convertView;
     }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public short[] getBoard() {
+        return board;
+    }
+
+    public void setBoard(short[] board) {
+        this.board = board;
+    }
+
+    public GridView getGridView() {
+        return gridView;
+    }
+
+    public void setGridView(GridView gridView) {
+        this.gridView = gridView;
+    }
+
+    public LayoutInflater getInflater() {
+        return inflater;
+    }
+
+    public void setInflater(LayoutInflater inflater) {
+        this.inflater = inflater;
+    }
+
+    public int[] getHighlightBoard() {
+        return highlightBoard;
+    }
+
+    public void setHighlightBoard(int[] highlightBoard) {
+        this.highlightBoard = highlightBoard;
+    }
+
+    public GameModel getGameModel() {
+        return gameModel;
+    }
+
+    public void setGameModel(GameModel gameModel) {
+        this.gameModel = gameModel;
+    }
+
+    public boolean isFoward() {
+        return foward;
+    }
+
+    public void setFoward(boolean foward) {
+        this.foward = foward;
+    }
+
+    public short[] getConverter() {
+        return converter;
+    }
+
+    public void setConverter(short[] converter) {
+        this.converter = converter;
+    }
 }

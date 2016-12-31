@@ -41,6 +41,27 @@
 
             />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:text="Flip Board"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/flip"
+                android:layout_gravity="left"/>
+
+            <Button
+                android:text="Undo Move"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/undo"
+                android:layout_gravity="right"/>
+        </LinearLayout>
+
+
+
     </LinearLayout>
 
     <!-- left drawer -->

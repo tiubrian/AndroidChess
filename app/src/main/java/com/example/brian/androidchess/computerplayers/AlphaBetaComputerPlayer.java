@@ -99,6 +99,9 @@ public class AlphaBetaComputerPlayer extends ComputerPlayer {
         if(turn == 'w') {
             Vector<Move> possibleMoves = prioritize(getAllPossibleWhiteMoves(canWhiteKingSideCastle,canWhiteQueenSideCastle,canBlackKingSideCastle,canBlackQueenSideCastle));
             if(possibleMoves.size() == 0) {
+                if(!isWhiteKingInCheck()) {
+                    return 0;
+                }
                 return -100000;
             }
             for(int i = 0; i < possibleMoves.size(); i++) {
@@ -123,6 +126,9 @@ public class AlphaBetaComputerPlayer extends ComputerPlayer {
         } else {
             Vector<Move> possibleMoves = prioritize(getAllPossibleBlackMoves(canWhiteKingSideCastle,canWhiteQueenSideCastle,canBlackKingSideCastle,canBlackQueenSideCastle));
             if(possibleMoves.size() == 0) {
+                if(!isBlackKingInCheck()) {
+                    return 0;
+                }
                 return 100000;
             }
             for(int i = 0; i < possibleMoves.size(); i++) {
@@ -148,7 +154,13 @@ public class AlphaBetaComputerPlayer extends ComputerPlayer {
         }
     }
 
+
+
     private int evaluateBoard() {
+       /* if(isThreeFoldDraw()) {
+            return 0;
+        }*/
+
         int score = 0;
         for (int i = 0; i < 128; i++) {
             // skip fake board
@@ -159,7 +171,12 @@ public class AlphaBetaComputerPlayer extends ComputerPlayer {
             switch (board[i]) {
                 case 1:
                     score += 100;
-                    score += pawnEvalTableWhite[i];
+                    if(boardModel.getNumBlackQueen() == 0 &&
+                            (boardModel.getNumBlackBishop() + boardModel.getNumBlackKnight()) <= 2) {
+                        score += pawnEvalTableWhiteEnd[i];
+                    } else {
+                        score += pawnEvalTableWhite[i];
+                    }
                     break;
                 case 2:
                     score += 525;
@@ -179,12 +196,23 @@ public class AlphaBetaComputerPlayer extends ComputerPlayer {
                     break;
                 case 6:
                     score += 100000;
-                    score += kingEvalTableBeginWhite[i];
+                    if(boardModel.getNumBlackQueen() == 0 &&
+                            (boardModel.getNumBlackBishop() + boardModel.getNumBlackKnight()) <= 2) {
+                        score += kingEvalTableEndWhite[i];
+                    } else {
+                        score += kingEvalTableBeginWhite[i];
+                    }
                     break;
 
                 case -1:
                     score -= 100;
-                    score -= pawnEvalTableBlack[i];
+
+                    if(boardModel.getNumWhiteQueen() == 0 &&
+                            (boardModel.getNumWhiteBishop() + boardModel.getNumWhiteKnight()) <= 2) {
+                        score -= pawnEvalTableBlackEnd[i];
+                    } else {
+                        score -= pawnEvalTableBlack[i];
+                    }
                     break;
                 case -2:
                     score -= 525;
@@ -205,7 +233,12 @@ public class AlphaBetaComputerPlayer extends ComputerPlayer {
                     break;
                 case -6:
                     score -= 100000;
-                    score -= kingEvalTableBeginBlack[i];
+                    if(boardModel.getNumWhiteQueen() == 0 &&
+                            (boardModel.getNumWhiteBishop() + boardModel.getNumWhiteKnight()) <= 2) {
+                        score -= kingEvalTableEndBlack[i];
+                    } else {
+                        score -= kingEvalTableBeginBlack[i];
+                    }
                     break;
             }
         }
