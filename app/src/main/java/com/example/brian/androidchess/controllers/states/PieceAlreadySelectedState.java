@@ -19,6 +19,9 @@ public class PieceAlreadySelectedState extends PressState {
 
     @Override
     public void press() {
+        if(gameModel.isComputerThinking()) {
+            return;
+        }
         // Setup
         char pressedPieceColor = '#';
         if(gameModel.getBoardModel().getBoard()[converter[position]] < 0) {
@@ -37,7 +40,7 @@ public class PieceAlreadySelectedState extends PressState {
         // Change board
         if(pressedPossibleMove() && selectedPieceColor == gameModel.getTurn()) {
             try {
-                Thread.sleep(300);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -50,7 +53,7 @@ public class PieceAlreadySelectedState extends PressState {
             } else {
                 gameModel.getBoardModel().pawnMove(gameModel.getBoardModel().getCurrentSelectedPosition(), converter[position]);
             }
-            gameModel.addMove(new Move(gameModel.getBoardModel().getCurrentSelectedPosition(),converter[position]));
+            gameModel.addMove(new Move(gameModel.getBoardModel().getCurrentSelectedPosition(),converter[position],gameModel.getBoardModel().getBoard()));
             gameModel.switchTurn();
             gameModel.getBoardModel().getCurrentPossibleMoves().clear();
         } else if(pressedPieceColor == '#') {

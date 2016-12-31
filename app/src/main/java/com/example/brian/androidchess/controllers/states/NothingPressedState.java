@@ -16,6 +16,9 @@ public class NothingPressedState extends PressState{
 
     @Override
     public void press() {
+        if(gameModel.isComputerThinking()) {
+            return;
+        }
         gameModel.getBoardModel().resetHighlightBoard();
         char pressedPieceColor = '#';
         if(gameModel.getBoardModel().getBoard()[converter[position]] < 0) {

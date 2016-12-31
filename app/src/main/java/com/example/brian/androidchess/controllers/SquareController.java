@@ -42,6 +42,9 @@ public class SquareController implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+        if(gameModel.isComputerThinking()) {
+            return false;
+        }
 
         switch (gameModel.getBoardModel().getStateEnum()) {
             case NOTHINGPRESSEDSTATE: pressState = new NothingPressedState(position,gameModel,this); break;

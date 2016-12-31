@@ -18,13 +18,19 @@ public class RandomComputerPlayer extends ComputerPlayer {
 
     @Override
     public Move getMove() {
+        return null;/*
         Vector<Move> possibleMoves;
         if(color == 'w') {
-            possibleMoves = getAllPossibleWhiteMoves();
+          //  possibleMoves = getAllPossibleWhiteMoves();
         } else {
             possibleMoves = getAllPossibleBlackMoves();
         }
-        Collections.shuffle(possibleMoves);
-        return possibleMoves.get(0);
+        //Collections.shuffle(possibleMoves);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return possibleMoves.get(0);*/
     }
 }

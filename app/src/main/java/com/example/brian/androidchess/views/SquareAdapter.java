@@ -26,6 +26,7 @@ public class SquareAdapter extends BaseAdapter{
     private LayoutInflater inflater;
     private int[] highlightBoard;
     private GameModel gameModel;
+    private boolean foward;
     private short[] converter = {
             0,1,2,3,4,5,6,7,
             16,17,18,19,20,21,22,23,
@@ -37,12 +38,13 @@ public class SquareAdapter extends BaseAdapter{
             112,113,114,115,116,117,118,119
     };
 
-    public SquareAdapter(Context context, GameModel gameModel, GridView gridView) {
+    public SquareAdapter(Context context, GameModel gameModel, GridView gridView, boolean foward) {
         this.context = context;
         this.board = gameModel.getBoardModel().getBoard();
         this.gridView = gridView;
         this.highlightBoard = gameModel.getBoardModel().getHighlightBoard();
         this.gameModel = gameModel;
+        this.foward = foward;
         this.inflater = LayoutInflater.from(context.getApplicationContext());
     }
 
@@ -66,6 +68,9 @@ public class SquareAdapter extends BaseAdapter{
 
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.square, null);
+        }
+        if(!foward) {
+            position = 63-position;
         }
 
         final ImageView oImageView = (ImageView)convertView.findViewById(R.id.innersquare);

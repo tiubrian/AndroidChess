@@ -92,6 +92,182 @@ public class BoardModel {
 
 
 
+
+    public boolean isBlackKingInCheck() {
+        for(int i = 0; i < 128; i++) {
+            // If we found a white piece
+            if(board[i] > 0) {
+                if (ATTACK_ARRAY[(blackKingPosition - i + 128)] != 0) {
+                    // Find the delta
+                    int delta = DELTA_ARRAY[blackKingPosition-i+128];
+                    int index = i;
+                    int attackIndex = ATTACK_ARRAY[(blackKingPosition - i + 128)];
+                    switch (board[i]) {
+                        case 1:
+                            if(attackIndex != 4) {
+                                continue;
+                            }
+                            break;
+                        case 2:
+                            if(attackIndex != 1 && attackIndex != 2) {
+                                continue;
+                            }
+                            break;
+                        case 3:
+                            if(attackIndex != 6) {
+                                continue;
+                            }
+                            break;
+                        case 4:
+                            if(attackIndex != 4 &&
+                                    attackIndex != 3 &&
+                                    attackIndex != 5) {
+                                continue;
+                            }
+                            break;
+                        case 5:
+                            if(attackIndex != 1 &&
+                                    attackIndex != 2 &&
+                                    attackIndex != 3 &&
+                                    attackIndex != 4 &&
+                                    attackIndex != 5) {
+                                continue;
+                            }
+                            break;
+                        case 6:
+                            if(attackIndex != 1 &&
+                                    attackIndex != 3 &&
+                                    attackIndex != 4) {
+                                continue;
+                            }
+                            break;
+                    }
+                    if(delta>0) {
+                        while(true) {
+                            index += delta;
+                            if(index > blackKingPosition) {
+                                break;
+                            }
+                            if(index == blackKingPosition) {
+                                return true;
+                            }
+                            if(board[index] != 0) {
+                                break;
+                            }
+                        }
+                    } else {
+                        while(true) {
+                            index += delta;
+                            if(index < blackKingPosition) {
+                                break;
+                            }
+                            if(index == blackKingPosition) {
+                                return true;
+                            }
+                            if(board[index] != 0) {
+                                break;
+                            }
+                        }
+
+                    }
+                }
+            }
+
+        }
+
+        return false;
+    }
+
+    public boolean isWhiteKingInCheck() {
+        for(int i = 0; i < 128; i++) {
+            // skip fake board
+            if((i & 0x0f) == 8) {
+                i += 7;
+                continue;
+            }
+
+            // If we found a black piece
+            if(board[i] < 0) {
+                if (ATTACK_ARRAY[(whiteKingPosition - i + 128)] != 0) {
+                    // Find the delta
+                    int delta = DELTA_ARRAY[whiteKingPosition-i+128];
+                    int index = i;
+                    int attackIndex = ATTACK_ARRAY[(whiteKingPosition - i + 128)];
+                    switch (board[i]) {
+                        case -1:
+                            if(attackIndex != 3) {
+                                continue;
+                            }
+                            break;
+                        case -2:
+                            if(attackIndex != 1 && attackIndex != 2) {
+                                continue;
+                            }
+                            break;
+                        case -3:
+                            if(attackIndex != 6) {
+                                continue;
+                            }
+                            break;
+                        case -4:
+                            if(attackIndex != 4 &&
+                                    attackIndex != 3 &&
+                                    attackIndex != 5) {
+                                continue;
+                            }
+                            break;
+                        case -5:
+                            if(attackIndex != 1 &&
+                                    attackIndex != 2 &&
+                                    attackIndex != 3 &&
+                                    attackIndex != 4 &&
+                                    attackIndex != 5) {
+                                continue;
+                            }
+                            break;
+                        case -6:
+                            if(attackIndex != 1 &&
+                                    attackIndex != 3 &&
+                                    attackIndex != 4) {
+                                continue;
+                            }
+                            break;
+                    }
+                    if(delta>0) {
+                        while(true) {
+                            index += delta;
+                            if(index > whiteKingPosition) {
+                                break;
+                            }
+                            if(index == whiteKingPosition) {
+                                return true;
+                            }
+                            if(board[index] != 0) {
+                                break;
+                            }
+                        }
+                    } else {
+                        while(true) {
+                            index += delta;
+                            if(index < whiteKingPosition) {
+                                break;
+                            }
+                            if(index == whiteKingPosition) {
+                                return true;
+                            }
+                            if(board[index] != 0) {
+                                break;
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
     public boolean isAttackedByBlack(int position) {
         for(int i = 0; i < 128; i++) {
             // skip fake board
@@ -269,180 +445,7 @@ public class BoardModel {
     }
 
 
-    public boolean isBlackKingInCheck() {
-        for(int i = 0; i < 128; i++) {
-            // If we found a white piece
-            if(board[i] > 0) {
-                if (ATTACK_ARRAY[(blackKingPosition - i + 128)] != 0) {
-                    // Find the delta
-                    int delta = DELTA_ARRAY[blackKingPosition-i+128];
-                    int index = i;
-                    int attackIndex = ATTACK_ARRAY[(blackKingPosition - i + 128)];
-                    switch (board[i]) {
-                        case 1:
-                            if(attackIndex != 4) {
-                                continue;
-                            }
-                            break;
-                        case 2:
-                            if(attackIndex != 1 && attackIndex != 2) {
-                                continue;
-                            }
-                            break;
-                        case 3:
-                            if(attackIndex != 6) {
-                                continue;
-                            }
-                            break;
-                        case 4:
-                            if(attackIndex != 4 &&
-                                    attackIndex != 3 &&
-                                    attackIndex != 5) {
-                                continue;
-                            }
-                            break;
-                        case 5:
-                            if(attackIndex != 1 &&
-                                    attackIndex != 2 &&
-                                    attackIndex != 3 &&
-                                    attackIndex != 4 &&
-                                    attackIndex != 5) {
-                                continue;
-                            }
-                            break;
-                        case 6:
-                            if(attackIndex != 1 &&
-                                    attackIndex != 3 &&
-                                    attackIndex != 4) {
-                                continue;
-                            }
-                            break;
-                    }
-                    if(delta>0) {
-                        while(true) {
-                            index += delta;
-                            if(index > blackKingPosition) {
-                               break;
-                            }
-                            if(index == blackKingPosition) {
-                                return true;
-                            }
-                            if(board[index] != 0) {
-                                break;
-                            }
-                        }
-                    } else {
-                        while(true) {
-                            index += delta;
-                            if(index < blackKingPosition) {
-                                break;
-                            }
-                            if(index == blackKingPosition) {
-                                return true;
-                            }
-                            if(board[index] != 0) {
-                                break;
-                            }
-                        }
 
-                    }
-                }
-            }
-
-        }
-
-        return false;
-    }
-
-    public boolean isWhiteKingInCheck() {
-        for(int i = 0; i < 128; i++) {
-            // skip fake board
-            if((i & 0x0f) == 8) {
-                i += 7;
-                continue;
-            }
-
-            // If we found a black piece
-            if(board[i] < 0) {
-                if (ATTACK_ARRAY[(whiteKingPosition - i + 128)] != 0) {
-                    // Find the delta
-                    int delta = DELTA_ARRAY[whiteKingPosition-i+128];
-                    int index = i;
-                    int attackIndex = ATTACK_ARRAY[(whiteKingPosition - i + 128)];
-                    switch (board[i]) {
-                        case -1:
-                            if(attackIndex != 3) {
-                                continue;
-                            }
-                            break;
-                        case -2:
-                            if(attackIndex != 1 && attackIndex != 2) {
-                                continue;
-                            }
-                            break;
-                        case -3:
-                            if(attackIndex != 6) {
-                                continue;
-                            }
-                            break;
-                        case -4:
-                            if(attackIndex != 4 &&
-                                    attackIndex != 3 &&
-                                    attackIndex != 5) {
-                                continue;
-                            }
-                            break;
-                        case -5:
-                            if(attackIndex != 1 &&
-                                    attackIndex != 2 &&
-                                    attackIndex != 3 &&
-                                    attackIndex != 4 &&
-                                    attackIndex != 5) {
-                                continue;
-                            }
-                            break;
-                        case -6:
-                            if(attackIndex != 1 &&
-                                    attackIndex != 3 &&
-                                    attackIndex != 4) {
-                                continue;
-                            }
-                            break;
-                    }
-                    if(delta>0) {
-                        while(true) {
-                            index += delta;
-                            if(index > whiteKingPosition) {
-                                break;
-                            }
-                            if(index == whiteKingPosition) {
-                                return true;
-                            }
-                            if(board[index] != 0) {
-                                break;
-                            }
-                        }
-                    } else {
-                        while(true) {
-                            index += delta;
-                            if(index < whiteKingPosition) {
-                                break;
-                            }
-                            if(index == whiteKingPosition) {
-                                return true;
-                            }
-                            if(board[index] != 0) {
-                                break;
-                            }
-                        }
-
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
 
     public short simulateMove(int source, int target) {
         short taken = board[target];
@@ -886,11 +889,18 @@ public class BoardModel {
             case 2:
                 if(source == 119) {
                     canWhiteKingSideCastle = false;
-                } else if(source == 12) {
+                } else if(source == 112) {
                     canWhiteQueenSideCastle = false;
                 }
                 break;
+            case -2:
+                if(source == 0) {
+                    this.setCanBlackQueenSideCastle(false);
+                } else if(source == 7) {
+                    this.setCanBlackKingSideCastle(false);
 
+                }
+                break;
         }
 
         return taken;
@@ -1116,5 +1126,45 @@ public class BoardModel {
 
     public void setBlackKingPosition(int blackKingPosition) {
         this.blackKingPosition = blackKingPosition;
+    }
+
+    public boolean isCanWhiteKingSideCastle() {
+        return canWhiteKingSideCastle;
+    }
+
+    public void setCanWhiteKingSideCastle(boolean canWhiteKingSideCastle) {
+        this.canWhiteKingSideCastle = canWhiteKingSideCastle;
+    }
+
+    public boolean isCanWhiteQueenSideCastle() {
+        return canWhiteQueenSideCastle;
+    }
+
+    public void setCanWhiteQueenSideCastle(boolean canWhiteQueenSideCastle) {
+        this.canWhiteQueenSideCastle = canWhiteQueenSideCastle;
+    }
+
+    public boolean isCanBlackKingSideCastle() {
+        return canBlackKingSideCastle;
+    }
+
+    public void setCanBlackKingSideCastle(boolean canBlackKingSideCastle) {
+        this.canBlackKingSideCastle = canBlackKingSideCastle;
+    }
+
+    public boolean isCanBlackQueenSideCastle() {
+        return canBlackQueenSideCastle;
+    }
+
+    public void setCanBlackQueenSideCastle(boolean canBlackQueenSideCastle) {
+        this.canBlackQueenSideCastle = canBlackQueenSideCastle;
+    }
+
+    public short[] getConverter() {
+        return converter;
+    }
+
+    public void setConverter(short[] converter) {
+        this.converter = converter;
     }
 }

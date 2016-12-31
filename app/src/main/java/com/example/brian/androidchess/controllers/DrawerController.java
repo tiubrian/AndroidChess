@@ -51,9 +51,15 @@ public class DrawerController implements View.OnClickListener{
                     toast.show();
                     return;
                 }
+                boolean fowward;
+                if(!redcompon) {
+                    fowward = true;
+                } else {
+                    fowward = false;
+                }
 
                 GameModel gameModel = new GameModel(mContext, redcompon, blackcompon);
-                SquareAdapter squareAdapter = new SquareAdapter(mContext,gameModel,gridview);
+                SquareAdapter squareAdapter = new SquareAdapter(mContext,gameModel,gridview,fowward);
                 gridview.setAdapter(squareAdapter);
                 gameModel.setSquareAdapter(squareAdapter);
 

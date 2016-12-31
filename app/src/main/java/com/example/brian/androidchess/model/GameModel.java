@@ -1,8 +1,10 @@
 package com.example.brian.androidchess.model;
 
+import android.app.Activity;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.example.brian.androidchess.computerplayers.AlphaBetaComputerPlayer;
 import com.example.brian.androidchess.computerplayers.ComputerPlayer;
 import com.example.brian.androidchess.computerplayers.Move;
 import com.example.brian.androidchess.computerplayers.RandomComputerPlayer;
@@ -23,6 +25,7 @@ public class GameModel {
 
     private ComputerPlayer whiteComputerPlayer = null;
     private ComputerPlayer blackComputerPlayer = null;
+    private boolean computerThinking = false;
 
     protected SquareAdapter squareAdapter;
 
@@ -30,27 +33,24 @@ public class GameModel {
     public GameModel(Context context, boolean whiteComputer, boolean blackComputer) {
         this.context = context;
         if(whiteComputer) {
-            whiteComputerPlayer = new RandomComputerPlayer(boardModel, 'w');
+            whiteComputerPlayer = new AlphaBetaComputerPlayer(boardModel, 'w');
         }
         if(blackComputer) {
-            blackComputerPlayer = new RandomComputerPlayer(boardModel, 'b');
+            blackComputerPlayer = new AlphaBetaComputerPlayer(boardModel, 'b');
         }
     }
 
     public void play() {
         if(whiteComputerPlayer != null) {
-            Move move = whiteComputerPlayer.getMove();
-            gameHistory.add(move);
-            if(!(this.getBoardModel().getBoard()[move.getBefore()] == 1 ||
-                    this.getBoardModel().getBoard()[move.getBefore()] == -1)) {
-                this.getBoardModel().movePiece(move.getBefore(),move.getAfter());
-            } else {
-                this.getBoardModel().pawnMove(move.getBefore(),move.getAfter());
-            }
-            boardModel.getHighlightBoard()[boardModel.unconvert(move.getBefore())] = 2;
-            boardModel.getHighlightBoard()[boardModel.unconvert(move.getAfter())] = 2;
+            //turn = 'b';
+            CharSequence text = "Computer is thinking...";
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+
+            new Thread(new WhiteAITurn()).start();
             squareAdapter.notifyDataSetChanged();
-            switchTurn();
         }
     }
 
@@ -62,59 +62,70 @@ public class GameModel {
         this.boardModel = boardModel;
     }
 
-    public void switchTurn() {
+    public synchronized void switchTurn() {
         if(gameover) {
             return;
         }
+
         if(turn == 'w') {
             turn = 'b';
             if(boardModel.getAllPossibleBlackMoves().size() == 0) {
                 gameover = true;
-                CharSequence text = "White wins!";
-                int duration = Toast.LENGTH_LONG;
+                ((Activity)(context)).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        squareAdapter.notifyDataSetChanged();
+                        CharSequence text = "White wins!";
+                        int duration = Toast.LENGTH_LONG;
 
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                    }
+                });
+
                 return;
             }
             if(blackComputerPlayer != null) {
-                Move move = blackComputerPlayer.getMove();
-                gameHistory.add(move);
-                if(!(this.getBoardModel().getBoard()[move.getBefore()] == 1 ||
-                        this.getBoardModel().getBoard()[move.getBefore()] == -1)) {
-                    this.getBoardModel().movePiece(move.getBefore(),move.getAfter());
-                } else {
-                    this.getBoardModel().pawnMove(move.getBefore(),move.getAfter());
-                }
-                boardModel.getHighlightBoard()[boardModel.unconvert(move.getBefore())] = 2;
-                boardModel.getHighlightBoard()[boardModel.unconvert(move.getAfter())] = 2;
-                squareAdapter.notifyDataSetChanged();
-                switchTurn();
+                CharSequence text = "Computer is thinking...";
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+                new Thread(new BlackAITurn()).start();
+
             }
         } else {
             turn = 'w';
             if(boardModel.getAllPossibleWhiteMoves().size() == 0) {
                 gameover = true;
-                CharSequence text = "Black wins!";
-                int duration = Toast.LENGTH_LONG;
 
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
+
+                ((Activity)(context)).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        CharSequence text = "Black wins!";
+                        int duration = Toast.LENGTH_LONG;
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                    }
+                });
+
                 return;
             }
             if(whiteComputerPlayer != null) {
-                Move move = whiteComputerPlayer.getMove();
-                gameHistory.add(move);
-                if(!(this.getBoardModel().getBoard()[move.getBefore()] == 1 ||
-                        this.getBoardModel().getBoard()[move.getBefore()] == -1)) {
-                    this.getBoardModel().movePiece(move.getBefore(),move.getAfter());
-                } else {
-                    this.getBoardModel().pawnMove(move.getBefore(),move.getAfter());
-                }
-                boardModel.getHighlightBoard()[boardModel.unconvert(move.getBefore())] = 2;
-                boardModel.getHighlightBoard()[boardModel.unconvert(move.getAfter())] = 2;
-                squareAdapter.notifyDataSetChanged();
-                switchTurn();
+
+
+                ((Activity)(context)).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        CharSequence text = "Computer is thinking...";
+                        int duration = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                        new Thread(new WhiteAITurn()).start();
+                    }
+                });
+
             }
         }
     }
@@ -170,5 +181,96 @@ public class GameModel {
 
     public void setSquareAdapter(SquareAdapter squareAdapter) {
         this.squareAdapter = squareAdapter;
+    }
+
+    class BlackAITurn implements Runnable{
+
+        @Override
+        public void run() {
+            computerThinking = true;
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            synchronized (this) {
+                Move move = blackComputerPlayer.getMove();
+                if(move == null) {
+                    gameover = true;
+                    return;
+                }
+                gameHistory.add(move);
+                if(!(boardModel.getBoard()[move.getBefore()] == 1 ||
+                        boardModel.getBoard()[move.getBefore()] == -1)) {
+                    boardModel.movePiece(move.getBefore(),move.getAfter());
+                } else {
+                    boardModel.pawnMove(move.getBefore(),move.getAfter());
+                }
+                boardModel.getHighlightBoard()[boardModel.unconvert(move.getBefore())] = 2;
+                boardModel.getHighlightBoard()[boardModel.unconvert(move.getAfter())] = 2;
+                ((Activity)(context)).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        squareAdapter.notifyDataSetChanged();
+                    }
+                });
+                computerThinking = false;
+                switchTurn();
+            }
+
+        }
+    }
+    class WhiteAITurn implements Runnable{
+
+        @Override
+        public void run() {
+            computerThinking = true;
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            synchronized (this) {
+                Move move = whiteComputerPlayer.getMove();
+                if(move == null) {
+                    gameover = true;
+                    return;
+                }
+                gameHistory.add(move);
+                if(!(boardModel.getBoard()[move.getBefore()] == 1 ||
+                        boardModel.getBoard()[move.getBefore()] == -1)) {
+                    boardModel.movePiece(move.getBefore(),move.getAfter());
+                } else {
+                    boardModel.pawnMove(move.getBefore(),move.getAfter());
+                }
+                boardModel.getHighlightBoard()[boardModel.unconvert(move.getBefore())] = 2;
+                boardModel.getHighlightBoard()[boardModel.unconvert(move.getAfter())] = 2;
+                ((Activity)(context)).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        squareAdapter.notifyDataSetChanged();
+                    }
+                });
+                computerThinking = false;
+                switchTurn();
+            }
+
+        }
+    }
+
+    public ArrayList<Move> getGameHistory() {
+        return gameHistory;
+    }
+
+    public void setGameHistory(ArrayList<Move> gameHistory) {
+        this.gameHistory = gameHistory;
+    }
+
+    public boolean isComputerThinking() {
+        return computerThinking;
+    }
+
+    public void setComputerThinking(boolean computerThinking) {
+        this.computerThinking = computerThinking;
     }
 }

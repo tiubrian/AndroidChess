@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         GameModel gameModel = new GameModel(this, false, false);
 
         GridView gridview = (GridView) findViewById(R.id.boardview);
-        SquareAdapter squareAdapter = new SquareAdapter(this,gameModel,gridview);
+        SquareAdapter squareAdapter = new SquareAdapter(this,gameModel,gridview,true);
         gridview.setAdapter(squareAdapter);
         gameModel.setSquareAdapter(squareAdapter);
 
