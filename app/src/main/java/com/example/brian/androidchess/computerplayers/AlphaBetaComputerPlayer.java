@@ -161,6 +161,9 @@ public class AlphaBetaComputerPlayer extends ComputerPlayer {
             return 0;
         }*/
 
+
+
+
         int score = 0;
         for (int i = 0; i < 128; i++) {
             // skip fake board
@@ -172,7 +175,8 @@ public class AlphaBetaComputerPlayer extends ComputerPlayer {
                 case 1:
                     score += 100;
                     if(boardModel.getNumBlackQueen() == 0 &&
-                            (boardModel.getNumBlackBishop() + boardModel.getNumBlackKnight()) <= 2) {
+                            (boardModel.getNumBlackBishop() + boardModel.getNumBlackKnight()) <= 2 &&
+                            boardModel.getNumBlackRook() < 2) {
                         score += pawnEvalTableWhiteEnd[i];
                     } else {
                         score += pawnEvalTableWhite[i];
@@ -197,7 +201,8 @@ public class AlphaBetaComputerPlayer extends ComputerPlayer {
                 case 6:
                     score += 100000;
                     if(boardModel.getNumBlackQueen() == 0 &&
-                            (boardModel.getNumBlackBishop() + boardModel.getNumBlackKnight()) <= 2) {
+                            (boardModel.getNumBlackBishop() + boardModel.getNumBlackKnight()) <= 2 &&
+                            boardModel.getNumBlackRook() < 2) {
                         score += kingEvalTableEndWhite[i];
                     } else {
                         score += kingEvalTableBeginWhite[i];
@@ -208,7 +213,8 @@ public class AlphaBetaComputerPlayer extends ComputerPlayer {
                     score -= 100;
 
                     if(boardModel.getNumWhiteQueen() == 0 &&
-                            (boardModel.getNumWhiteBishop() + boardModel.getNumWhiteKnight()) <= 2) {
+                            (boardModel.getNumWhiteBishop() + boardModel.getNumWhiteKnight()) <= 2 &&
+                            boardModel.getNumWhiteRook() < 2) {
                         score -= pawnEvalTableBlackEnd[i];
                     } else {
                         score -= pawnEvalTableBlack[i];
@@ -234,7 +240,10 @@ public class AlphaBetaComputerPlayer extends ComputerPlayer {
                 case -6:
                     score -= 100000;
                     if(boardModel.getNumWhiteQueen() == 0 &&
-                            (boardModel.getNumWhiteBishop() + boardModel.getNumWhiteKnight()) <= 2) {
+                            (boardModel.getNumWhiteBishop() + boardModel.getNumWhiteKnight()) <= 2 &&
+                            boardModel.getNumWhiteRook() < 2) {
+                        depth = 4;
+
                         score -= kingEvalTableEndBlack[i];
                     } else {
                         score -= kingEvalTableBeginBlack[i];
@@ -262,10 +271,18 @@ public class AlphaBetaComputerPlayer extends ComputerPlayer {
                 return alpha;
             }
 
+
+
             Vector<Move> possibleMoves = prioritize(getWhiteCaptureMoves(canWhiteKingSideCastle,canWhiteQueenSideCastle,canBlackKingSideCastle,canBlackQueenSideCastle));
+            /*if(possibleMoves.size() == 0) {
+                if(getAllPossibleWhiteMoves(false,false,false,false).size() == 0) {
+                    if(isWhiteKingInCheck()) {
+                        return -10000;
+                    }
+                    return 0;
+                }
+            }*/
             for(int i = 0; i < possibleMoves.size(); i++) {
-
-
                 Move move = possibleMoves.get(i);
                 short taken = simulateMove(move);
                 int score = quiesent('b', alpha,beta,CANWHITEKINGSIDECASTLE,CANWHITEQUEENSIDECASTLE,CANBLACKKINGSIDECASTLE,CANWHITEQUEENSIDECASTLE);
@@ -280,6 +297,7 @@ public class AlphaBetaComputerPlayer extends ComputerPlayer {
             }
             return alpha;
         } else {
+
             int stand_pat = evaluateBoard();
             if(stand_pat < beta) {
                 beta = stand_pat;
@@ -289,7 +307,14 @@ public class AlphaBetaComputerPlayer extends ComputerPlayer {
             }
 
             Vector<Move> possibleMoves = prioritize(getBlackCaptureMoves(canWhiteKingSideCastle,canWhiteQueenSideCastle,canBlackKingSideCastle,canBlackQueenSideCastle));
-
+            /*if(possibleMoves.size()== 0) {
+                if(getAllPossibleBlackMoves(false,false,false,false).size() == 0) {
+                    if(isBlackKingInCheck()) {
+                        return 10000;
+                    }
+                    return 0;
+                }
+            }*/
             for(int i = 0; i < possibleMoves.size(); i++) {
 
                 Move move = possibleMoves.get(i);

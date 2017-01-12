@@ -1,5 +1,10 @@
 package com.example.brian.androidchess.model;
 
+import android.app.Activity;
+import android.content.Context;
+import android.media.MediaPlayer;
+
+import com.example.brian.androidchess.R;
 import com.example.brian.androidchess.controllers.states.StateEnum;
 
 import java.security.Policy;
@@ -102,7 +107,11 @@ public class BoardModel {
     private int whiteKingPosition = 116;
     private int blackKingPosition = 4;
 
+    private Context context;
 
+    BoardModel(Context context) {
+        this.context = context;
+    }
 
 
 
@@ -871,7 +880,47 @@ public class BoardModel {
         }
     }
 
+    private void playSound(int source, int target,short taken) {
+        if(isWhiteKingInCheck() || isBlackKingInCheck()) {
+            if(getAllPossibleWhiteMoves().size() == 0 ||
+                    getAllPossibleBlackMoves().size() == 0) {
+                ((Activity)(context)).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        MediaPlayer mp = MediaPlayer.create(context, R.raw.check2);
+                        mp.start();
+                    }
+                });
+            } else {
+                ((Activity)(context)).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        MediaPlayer mp = MediaPlayer.create(context, R.raw.check);
+                        mp.start();
+                    }
+                });
+            }
+        } else if(taken != 0) {
+            ((Activity)(context)).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    MediaPlayer mp = MediaPlayer.create(context, R.raw.capture);
+                    mp.start();
+                }
+            });
+        } else {
+            ((Activity)(context)).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    MediaPlayer mp = MediaPlayer.create(context, R.raw.move);
+                    mp.start();
+                }
+            });
+        }
+    }
+
     public short movePiece(int source, int target) {
+
         switch (board[target]) {
             case 2: numWhiteRook--; break;
             case 3: numWhiteKnight--; break;
@@ -935,10 +984,13 @@ public class BoardModel {
                 break;
         }
         //addBoardPosition(this.toString());
+        playSound(source,target,taken);
+
         return taken;
     }
 
     public short pawnMove(int source, int target) {
+
         switch (board[target]) {
             case 2: numWhiteRook--; break;
             case 3: numWhiteKnight--; break;
@@ -954,6 +1006,7 @@ public class BoardModel {
         short taken = board[target];
         board[target] = board[source];
         board[source] = 0;
+        playSound(source,target,taken);
 
         // Promotion stuff
         if((target&0xf0)==0 && board[target] == 1) {
@@ -979,6 +1032,7 @@ public class BoardModel {
             }
         }*/
         //addBoardPosition(this.toString());
+
         return taken;
     }
     public int unconvert(int bigPosition) {

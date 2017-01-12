@@ -2,8 +2,10 @@ package com.example.brian.androidchess.model;
 
 import android.app.Activity;
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.widget.Toast;
 
+import com.example.brian.androidchess.R;
 import com.example.brian.androidchess.computerplayers.AlphaBetaComputerPlayer;
 import com.example.brian.androidchess.computerplayers.ComputerPlayer;
 import com.example.brian.androidchess.computerplayers.Move;
@@ -20,7 +22,7 @@ import java.util.Map;
 
 public class GameModel {
 
-    private BoardModel boardModel = new BoardModel();
+    private BoardModel boardModel;
     private Context context;
     private char turn = 'w';
     private boolean gameover = false;
@@ -33,7 +35,15 @@ public class GameModel {
     protected SquareAdapter squareAdapter;
 
 
-    public GameModel(Context context, boolean whiteComputer, boolean blackComputer) {
+    public GameModel(final Context context, boolean whiteComputer, boolean blackComputer) {
+        boardModel = new BoardModel(context);
+        ((Activity)(context)).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                MediaPlayer mp = MediaPlayer.create(context, R.raw.newgame);
+                mp.start();
+            }
+        });
         this.context = context;
         if(whiteComputer) {
             whiteComputerPlayer = new AlphaBetaComputerPlayer(boardModel, 'w');
@@ -69,6 +79,7 @@ public class GameModel {
         if(gameover) {
             return;
         }
+
 
         if(turn == 'w') {
             turn = 'b';

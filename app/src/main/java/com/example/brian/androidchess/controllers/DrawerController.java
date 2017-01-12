@@ -47,6 +47,7 @@ public class DrawerController implements View.OnClickListener{
             case "newgame":
                 boolean redcompon = redcompswitch.isChecked();
                 boolean blackcompon = blackcompswitch.isChecked();
+
                 if(redcompon && blackcompon) {
                     drawerLayout.closeDrawers();
                     CharSequence text = "You cannot have two computers play each other";
